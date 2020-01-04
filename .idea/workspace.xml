@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="886f8521-c5fc-423f-816e-a9c103f15c31" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blueprints/login_register/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprints/login_register/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/get_valid.py" beforeDir="false" afterPath="$PROJECT_DIR$/common/get_valid.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-    </list>
+    <list default="true" id="886f8521-c5fc-423f-816e-a9c103f15c31" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,7 +188,7 @@
       <workItem from="1578105613233" duration="3000" />
       <workItem from="1578107950397" duration="635000" />
       <workItem from="1578114276805" duration="10712000" />
-      <workItem from="1578129986286" duration="86000" />
+      <workItem from="1578129986286" duration="345000" />
     </task>
     <servers />
   </component>
