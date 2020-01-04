@@ -294,7 +294,7 @@ class AlarmMessageDelete(Resource):
                     db.session.commit()
                 except:
                     db.session.rollback()
-                    return jsonify({'msg':f'编码为{a}的报警信息删除失败', 'code':400})
+                    return jsonify({'msg':'报警信息删除失败', 'code':400})
         return jsonify({'msg':'批量删除成功', 'code':200})
 
 

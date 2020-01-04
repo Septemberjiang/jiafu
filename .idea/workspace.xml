@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="886f8521-c5fc-423f-816e-a9c103f15c31" name="Default Changelist" comment="" />
+    <list default="true" id="886f8521-c5fc-423f-816e-a9c103f15c31" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blueprints/equipment/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprints/equipment/views.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,7 +191,7 @@
       <workItem from="1578105613233" duration="3000" />
       <workItem from="1578107950397" duration="635000" />
       <workItem from="1578114276805" duration="10712000" />
-      <workItem from="1578129986286" duration="345000" />
+      <workItem from="1578129986286" duration="462000" />
     </task>
     <servers />
   </component>
