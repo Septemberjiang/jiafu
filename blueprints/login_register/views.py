@@ -2,7 +2,7 @@ import base64
 from uuid import uuid4
 
 from common.auth_utils import login_required
-from common.get_valid import ValidCodeImg
+# from common.get_valid import ValidCodeImg
 from models import User
 from exts import db
 from flask import request, jsonify, session
@@ -11,7 +11,7 @@ from flask_apispec import use_kwargs
 from marshmallow import fields
 
 from flask_restful import Resource
-from config import redis_0
+# from config import redis_0
 
 
 class Login(Resource):
@@ -89,18 +89,18 @@ class Register(Resource):
             return jsonify({'msg':'注册失败','code':400})
 
 
-class GetValidResource(Resource):
-
-    def get(self):
-        """
-        获取验证码
-        :return:
-        """
-        img = ValidCodeImg()
-        img_data, valid_code = img.getValidCodeImg()
-        base64_data = base64.b64encode(img_data)
-        data = base64_data.decode()
-        uuid = uuid4()
-        print('valid_code:', valid_code)
-        redis_0.set(f'{uuid}_code', valid_code, ex=180)
-        return jsonify({'data': data, 'uuid': uuid})
+# class GetValidResource(Resource):
+#
+#     def get(self):
+#         """
+#         获取验证码
+#         :return:
+#         """
+#         img = ValidCodeImg()
+#         img_data, valid_code = img.getValidCodeImg()
+#         base64_data = base64.b64encode(img_data)
+#         data = base64_data.decode()
+#         uuid = uuid4()
+#         print('valid_code:', valid_code)
+#         redis_0.set(f'{uuid}_code', valid_code, ex=180)
+#         return jsonify({'data': data, 'uuid': uuid})
