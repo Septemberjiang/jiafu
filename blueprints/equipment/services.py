@@ -49,10 +49,10 @@ def camrea_add(kwargs, method=None):
     if method == 'add':
         camrea = Camera.query.filter_by(unique_camera_id=unique_camera_id, unique_server_id=unique_server_id).first()
         if camrea:
-            return jsonify({'msg':f'标识码为{unique_server_id}的服务器下已存在{unique_camera_id}摄像头','code':400})
+            return jsonify({'msg':'服务器下已存在摄像头','code':400})
     server = Server.query.filter_by(unique_server_id=unique_server_id).first()
     if not server:
-        return jsonify({'msg':f'不存在标识码为{unique_server_id}的服务器', 'code':400})
+        return jsonify({'msg':'不存在标识码为{unique_server_id}的服务器', 'code':400})
     try:
         camera_obj = Camera.query.filter_by(unique_camera_id=unique_camera_id).first()
         if method == 'add':
@@ -72,11 +72,11 @@ def camrea_add(kwargs, method=None):
         db.session.add(camera_obj)
         db.session.commit()
         content = '添加' if method=='add' else '修改'
-        return jsonify({"msg": f"标识码为{unique_camera_id}的摄像头设备{content}成功", 'code': 200})
+        return jsonify({"msg": "标识码为的摄像头设备{content}成功", 'code': 200})
     except Exception as e:
         db.session.rollback()
         content = '添加' if method == 'add' else '修改'
-        return jsonify({"msg":f"标识码为{unique_camera_id}的摄像头设备未{content}成功", 'code':400})
+        return jsonify({"msg":"标识码为{unique_camera_id}的摄像头设备未{content}成功", 'code':400})
 
 def server_all(server_obj):
     """
@@ -143,18 +143,18 @@ def server_modify_delete(name=None, kwargs=None):
     unique_server_id = kwargs.get('unique_server_id')
     server = Server.query.filter_by(unique_server_id=unique_server_id).first()
     if not server:
-        return jsonify({'msg': f'没有标识码为{unique_server_id}的服务器', 'code': 400})
+        return jsonify({'msg': '没有标识码为{unique_server_id}的服务器', 'code': 400})
     if name == 'out':
         camera = Camera.query.filter_by(unique_server_id=unique_server_id).all()
         if camera:
-            return jsonify({'msg':f'标识码为{unique_server_id}的服务器下有相关摄像头,无法删除','code':400})
+            return jsonify({'msg':'标识码为{unique_server_id}的服务器下有相关摄像头,无法删除','code':400})
         try:
             db.session.delete(server)
             db.session.commit()
-            return jsonify({'msg':f'标识码为{unique_server_id}的服务器删除成功','code':200})
+            return jsonify({'msg':'标识码为{unique_server_id}的服务器删除成功','code':200})
         except:
             db.session.rollback()
-            return jsonify({'msg':f'标识码为{unique_server_id}的服务器删除出错','code':400})
+            return jsonify({'msg':'标识码为{unique_server_id}的服务器删除出错','code':400})
     if name == 'modify':
         server_name = kwargs.get('server_name')
         server_ip = kwargs.get('server_ip')
@@ -174,11 +174,11 @@ def server_modify_delete(name=None, kwargs=None):
             server.server_state=server_state
             db.session.add(server)
             db.session.commit()
-            return jsonify({'msg':f"标识码为{unique_server_id}的服务器修改成功",'code':200})
+            return jsonify({'msg':"标识码为{unique_server_id}的服务器修改成功",'code':200})
         except Exception as e:
             print(e)
             db.session.rollback()
-            return jsonify({'msg':f'标识码为{unique_server_id}的服务器修改出错','code':400})
+            return jsonify({'msg':'标识码为{unique_server_id}的服务器修改出错','code':400})
     if name == 'rendering':
         server_dict = dict()
         server_dict['unique_server_id']=server.unique_server_id
@@ -221,7 +221,7 @@ def alarm_info_add(kwargs):
     link_obj = kwargs.get('link_obj')
     camera = Camera.query.filter_by(unique_camera_id=unique_camera_id).first()
     if not camera:
-       return jsonify({'msg':f"并未找到相关{unique_camera_id}的摄像头设备", 'code':400})
+       return jsonify({'msg':"并未找到相关{unique_camera_id}的摄像头设备", 'code':400})
     try:
         alarm = Alarm_info()
         alarm.alarm_content=alarm_content
