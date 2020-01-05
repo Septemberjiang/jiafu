@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="886f8521-c5fc-423f-816e-a9c103f15c31" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blueprints/equipment/services.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprints/equipment/services.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/project.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manage.py" beforeDir="false" afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -89,7 +90,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app.py" />
+      <option name="SCRIPT_NAME" value="E:\项目\jiafu\project.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -120,9 +121,9 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Flask (app.py)" type="Python.FlaskServer" temporary="true" nameIsGenerated="true">
+    <configuration name="Flask (project.py)" type="Python.FlaskServer" temporary="true" nameIsGenerated="true">
       <module name="display_platform" />
-      <option name="target" value="$PROJECT_DIR$/app.py" />
+      <option name="target" value="$PROJECT_DIR$/project.py" />
       <option name="targetType" value="PATH" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -137,7 +138,7 @@
     </configuration>
     <configuration name="display_platform" type="Python.FlaskServer">
       <module name="display_platform" />
-      <option name="target" value="$PROJECT_DIR$/app.py" />
+      <option name="target" value="$PROJECT_DIR$/project.py" />
       <option name="targetType" value="PATH" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -152,13 +153,13 @@
     </configuration>
     <list>
       <item itemvalue="Flask server.display_platform" />
-      <item itemvalue="Flask server.Flask (app.py)" />
+      <item itemvalue="Flask server.Flask (project.py)" />
       <item itemvalue="Python.app" />
       <item itemvalue="Python.face_desk" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Flask server.Flask (app.py)" />
+        <item itemvalue="Flask server.Flask (project.py)" />
         <item itemvalue="Python.face_desk" />
       </list>
     </recent_temporary>
@@ -191,7 +192,8 @@
       <workItem from="1578105613233" duration="3000" />
       <workItem from="1578107950397" duration="635000" />
       <workItem from="1578114276805" duration="10712000" />
-      <workItem from="1578129986286" duration="745000" />
+      <workItem from="1578129986286" duration="1346000" />
+      <workItem from="1578230479136" duration="91000" />
     </task>
     <servers />
   </component>
@@ -203,7 +205,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
