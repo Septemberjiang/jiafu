@@ -2,7 +2,7 @@ import base64
 from uuid import uuid4
 
 from common.auth_utils import login_required
-# from common.get_valid import ValidCodeImg
+from common.get_valid import ValidCodeImg
 from models import User
 from exts import db
 from flask import request, jsonify, session
@@ -11,7 +11,7 @@ from flask_apispec import use_kwargs
 from marshmallow import fields
 
 from flask_restful import Resource
-# from config import redis_0
+from config import redis_0
 
 
 class Login(Resource):
@@ -22,7 +22,7 @@ class Login(Resource):
         # 'uuid': fields.String(required=True),
     })
     def post(self, **kwargs):
-        uname=kwargs.get('username')
+        account=kwargs.get('username')
         pwd=kwargs.get('password')
         # valid_code=kwargs.get('valid_code')
         # uuid=kwargs.get('uuid')
@@ -31,13 +31,13 @@ class Login(Resource):
         #     return jsonify({'msg':'验证码过期','code':400})
         # if valid_code.upper() != code.upper():
         #     return jsonify({'msg':'验证码错误','code':400})
-        is_user = db.session.query(User).filter_by(uname=uname).first()
+        is_user = db.session.query(User).filter_by(account=account).first()
         if not is_user:
             return jsonify({'msg':"用户不存在",'cod e':400})
         obj = hashlib.md5(b'str')  # 实例化md5的时候传个参数，这叫加盐
         obj.update(pwd.encode(encoding="utf-8"))
         password = obj.hexdigest()
-        user=db.session.query(User).filter(User.uname==uname,User.pwd==password).first()
+        user=db.session.query(User).filter(User.account==account,User.pwd==password).first()
         if user:
             session['user_id'] = user.uid
             session.permanent = True
@@ -84,23 +84,23 @@ class Register(Resource):
             db.session.add(user)
             db.session.commit()
             return jsonify({'msg':'注册成功','code':200})
-        except:
+        except Exception as e:
             db.session.rollback()
             return jsonify({'msg':'注册失败','code':400})
 
 
-# class GetValidResource(Resource):
-#
-#     def get(self):
-#         """
-#         获取验证码
-#         :return:
-#         """
-#         img = ValidCodeImg()
-#         img_data, valid_code = img.getValidCodeImg()
-#         base64_data = base64.b64encode(img_data)
-#         data = base64_data.decode()
-#         uuid = uuid4()
-#         print('valid_code:', valid_code)
-#         redis_0.set(f'{uuid}_code', valid_code, ex=180)
-#         return jsonify({'data': data, 'uuid': uuid})
+class GetValidResource(Resource):
+
+    def get(self):
+        """
+        获取验证码
+        :return:
+        """
+        img = ValidCodeImg()
+        img_data, valid_code = img.getValidCodeImg()
+        base64_data = base64.b64encode(img_data)
+        data = base64_data.decode()
+        uuid = uuid4()
+        print('valid_code:', valid_code)
+        redis_0.set(f'{uuid}_code', valid_code, ex=180)
+        return jsonify({'data': data, 'uuid': uuid})
