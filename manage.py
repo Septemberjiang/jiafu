@@ -6,10 +6,10 @@ from flask_migrate import Migrate,MigrateCommand
 
 #需要把映射到数据库中的模型导入到manage.py中
 from models import User
-from models import Uer_Role
+from models import User_Role
 from models import Role
-from models import Role_Limit
-from models import Limit
+from models import Role_Permission
+from models import Permission
 from models import Server
 from models import Camera
 from models import Alarm_info

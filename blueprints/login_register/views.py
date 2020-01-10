@@ -11,19 +11,15 @@ from flask_apispec import use_kwargs
 from marshmallow import fields
 
 from flask_restful import Resource
-from config import redis_0
+# from config import redis_0
 
 
 class Login(Resource):
-    @use_kwargs({
-        'username': fields.String(required=True),
-        'password': fields.String(required=True),
-        # 'valid_code': fields.String(required=True),
-        # 'uuid': fields.String(required=True),
-    })
-    def post(self, **kwargs):
-        account=kwargs.get('username')
-        pwd=kwargs.get('password')
+
+    def post(self):
+        form = request.get_json()
+        account=form.get('username')
+        pwd=form.get('password')
         # valid_code=kwargs.get('valid_code')
         # uuid=kwargs.get('uuid')
         # code = redis_0.get(f'{uuid}_code')
@@ -39,33 +35,23 @@ class Login(Resource):
         password = obj.hexdigest()
         user=db.session.query(User).filter(User.account==account,User.pwd==password).first()
         if user:
-            session['user_id'] = user.uid
-            session.permanent = True
             return jsonify({'msg': '登录成功', 'code': 200})
         else:
             return jsonify({'msg':'账号密码错误', 'code':200})
 
     def get(self):
-        session.clear()
         return jsonify({'msg':"退出登录", 'code':200})
 
 
 class Register(Resource):
-    @use_kwargs({
-        'username': fields.String(required=True),
-        'password': fields.String(required=True),
-        'is_password': fields.String(required=True),
-        'sex': fields.String(required=True),
-        'age': fields.Integer(required=True),
-        'account': fields.String(required=True)})
-    # @login_require
-    def post(self,**kwargs):
-        uname = kwargs.get('username')
-        pwd = kwargs.get('password')
-        is_pwd = kwargs.get('is_password')
-        sex = kwargs.get('sex')
-        age = kwargs.get('age')
-        account = kwargs.get('account')
+    def post(self):
+        form = request.get_json()
+        uname = form.get('username')
+        pwd = form.get('password')
+        is_pwd = form.get('is_password')
+        sex = form.get('sex')
+        age = form.get('age')
+        account = form.get('account')
         user_obj = User.query.filter_by(uname=uname).first()
         if user_obj:
             return jsonify({'msg':'用户名已存在','code':400})
@@ -89,18 +75,18 @@ class Register(Resource):
             return jsonify({'msg':'注册失败','code':400})
 
 
-class GetValidResource(Resource):
-
-    def get(self):
-        """
-        获取验证码
-        :return:
-        """
-        img = ValidCodeImg()
-        img_data, valid_code = img.getValidCodeImg()
-        base64_data = base64.b64encode(img_data)
-        data = base64_data.decode()
-        uuid = uuid4()
-        print('valid_code:', valid_code)
-        redis_0.set(f'{uuid}_code', valid_code, ex=180)
-        return jsonify({'data': data, 'uuid': uuid})
+# class GetValidResource(Resource):
+#
+#     def get(self):
+#         """
+#         获取验证码
+#         :return:
+#         """
+#         img = ValidCodeImg()
+#         img_data, valid_code = img.getValidCodeImg()
+#         base64_data = base64.b64encode(img_data)
+#         data = base64_data.decode()
+#         uuid = uuid4()
+#         print('valid_code:', valid_code)
+#         redis_0.set(f'{uuid}_code', valid_code, ex=180)
+#         return jsonify({'data': data, 'uuid': uuid})

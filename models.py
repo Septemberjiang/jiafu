@@ -1,4 +1,7 @@
+from sqlalchemy.exc import SQLAlchemyError
+
 from exts import db
+from sqlalchemy.dialects.postgresql import UUID
 
 from sqlalchemy import Column, Integer, \
     VARCHAR
@@ -15,7 +18,7 @@ class User(db.Model):
     pwd = db.Column(db.String(50), nullable=False)
 
 
-class Uer_Role(db.Model):
+class User_Role(db.Model):
     __tablename__ = 'tb_user_role'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     uid = db.Column(db.Integer, db.ForeignKey('tb_user.uid'), nullable=False)
@@ -25,25 +28,35 @@ class Uer_Role(db.Model):
 class Role(db.Model):
     __tablename__ = 'tb_role'
     rid = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    role = db.Column(db.String(50), nullable=True, unique=True)
+    name = db.Column(db.String(50), nullable=True, unique=True)
+    describe = db.Column(db.String(50))
+    state = db.Column(db.String(50))
 
 
-class Role_Limit(db.Model):
-    __tablename__ = 'tb_role_limit'
+
+class Role_Permission(db.Model):
+    __tablename__ = 'tb_role_permission'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     rid = db.Column(db.Integer, db.ForeignKey('tb_role.rid'), nullable=False)
-    lid = db.Column(db.Integer, db.ForeignKey('tb_limit.lid'), nullable=False)
+    pid = db.Column(db.Integer, db.ForeignKey('tb_permission.pid'), nullable=False)
 
 
-class Limit(db.Model):
-    __tablename__ = 'tb_limit'
-    lid = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    limit = db.Column(db.Integer, nullable=False, unique=True)
+class Permission(db.Model):
+    __tablename__ = 'tb_permission'
+    pid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(50))
+    pname = db.Column(db.String(50))
+    url = db.Column(db.String(50))
+    parent_id = db.Column(Integer)
+    action = db.Column(db.String(50))
+    describe = db.Column(db.String(1500))
+
 
 
 class Server(db.Model):
     __tablename__='tb_server'
     unique_server_id=db.Column(db.String(50), primary_key=True)
+    device_no = db.Column(db.String(50))
     server_name=db.Column(db.String(50))
     server_ip=db.Column(db.String(50))
     province=db.Column(db.String(50))
@@ -51,21 +64,22 @@ class Server(db.Model):
     county=db.Column(db.String(50))
     company=db.Column(db.String(50))
     server_state=db.Column(db.String(50))
+    camera_info = db.relationship('Camera', backref='tb_server', lazy='select')
 
 class Camera(db.Model):
     __tablename__='tb_camera'
     unique_camera_id=db.Column(db.String(50), primary_key=True)
+    device_no = db.Column(db.String(50))
     camera_name=db.Column(db.String(50))
     camera_ip=db.Column(db.String(50))
     camera_position=db.Column(db.String(50))
     rtsp_address=db.Column(db.String(50))
-    distinguish_wide=db.Column(db.String(50))  # 识别阔值
-    check_space = db.Column(db.String(50))  # 检测间隔
-    scene_at_degree = db.Column(db.String(50))  # 场景相识度
-    move_check_wide = db.Column(db.String(50))  # 移动检测阔值
-    equipment_state = db.Column(db.String(50))  # 设备是否启用
+    distinguish_wide=db.Column(db.String(50), default=0.6)  # 识别阔值
+    check_space = db.Column(db.String(50), default=5)  # 检测间隔
+    scene_at_degree = db.Column(db.String(50), default=0.3)  # 场景相识度
+    move_check_wide = db.Column(db.String(50), default=1000)  # 移动检测阔值
+    equipment_state = db.Column(db.String(50), default=0)  # 设备是否启用
     unique_server_id = db.Column(db.String(50), db.ForeignKey('tb_server.unique_server_id'), nullable=False)
-    camera_state = db.Column(db.String(50))  # 摄像头状态
 
 
 class Alarm_info(db.Model):

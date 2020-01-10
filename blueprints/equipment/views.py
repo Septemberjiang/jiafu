@@ -1,14 +1,33 @@
-from common.auth_utils import login_required
-from common.utils import get_list_data
-from models import User, Camera, Server, Alarm_info
+from common.utils import json_response
+from models import Camera, Server
 from exts import db
-from flask import request, jsonify, session
+from flask import request, jsonify
 from flask_restful import Resource
-from blueprints.equipment.services import camrea_all, server_all,  server_add, server_modify_delete, \
-    camrea_add
+from blueprints.equipment.services import server_add, server_modify_delete, \
+    camrea_add, ServerSchema, CameraSchema, camera_exhibition
 from common.pagination import paginate
-from flask_apispec import use_kwargs
-from marshmallow import fields
+
+
+
+#查看所有的设备
+class ExhibitionCamera(Resource):
+
+    def get(self):
+        """
+        查看所有的设备
+        :return:
+        """
+        args = request.args
+        page = args.get('page', 1)
+        size = args.get('size', 10)
+        camera = args.get('camera')
+        camrea_obj = Camera.query.all()
+        if camrea_obj:
+            data = camera_exhibition(camera, camrea_obj, page, size)
+            return data
+        else:
+            return json_response(None, error_message="目前任何服务器下都无设备信息", status=400)
+
 
 # 查看某台服务器下的所有摄像头
 class Exhibition(Resource):
@@ -23,18 +42,11 @@ class Exhibition(Resource):
         size = args.get('size',10)
         camera = args.get('camera')
         camrea_obj = Camera.query.filter_by(unique_server_id=unique_server_id)
-        if camera:
-            """
-            筛选摄像头名称
-            """
-            camrea_obj = camrea_obj.filter(Camera.camera_name.like("%{}%".format(camera)))
         if camrea_obj:
-            page_result = paginate(camrea_obj, int(page), int(size))
-            camrea_list =camrea_all(page_result.items)
-            result_data = get_list_data(camrea_list, page_result)
-            return result_data
+            data = camera_exhibition(camera,camrea_obj, page, size)
+            return data
         else:
-            return get_list_data(None, error_message="该服务器下目前没有设备", status=400)
+            return json_response(None, error_message="该服务器下目前没有设备", status=400)
 
 
 #摄像头的添加
@@ -64,20 +76,8 @@ class ExhibitionReseource(Resource):
         camera = Camera.query.filter_by(unique_camera_id=unique_camera_id).first()
         if not camera:
             return jsonify({'msg': '摄像头信息不匹配', 'code': 400})
-        camera_dict = dict()
-        camera_dict['unique_camera_id'] = camera.unique_camera_id
-        camera_dict['camera_name'] = camera.camera_name
-        camera_dict['device_no'] = camera.device_no
-        camera_dict['camera_ip'] = camera.camera_ip
-        camera_dict['camera_position'] = camera.camera_position
-        camera_dict['rtsp_address'] = camera.rtsp_address
-        camera_dict['distinguish_wide'] = camera.distinguish_wide
-        camera_dict['check_space'] = camera.check_space
-        camera_dict['scene_at_degree'] = camera.scene_at_degree
-        camera_dict['move_check_wide'] = camera.move_check_wide
-        camera_dict['equipment_state'] = camera.equipment_state
-        camera_dict['unique_server_id'] = camera.unique_server_id
-        camera_dict['camera_state'] = camera.camera_state
+        camera_schema = CameraSchema()
+        camera_dict = camera_schema.dump(camera)
         return jsonify({"camera": camera_dict})
 
     def delete(self, unique_camera_id):
@@ -115,12 +115,13 @@ class ServerResource(Resource):
         if server_obj:
             # page_result =paginate(server_obj,int(page),int(size))
             # server = server_all(page_result.items)
-            server = server_all(server_obj)
+            server = ServerSchema(many=True)
+            server_data = server.dump(server_obj.all())
             # result_data = get_list_data(server, page_result)
-            result_data = get_list_data(server, status=200)
+            result_data = json_response(server_data, status=200)
             return result_data
         else:
-            return get_list_data(None, error_message="目前没有服务器", status=400)
+            return json_response(None, error_message="目前没有服务器", status=400)
 
     def post(self):
         """
@@ -162,7 +163,6 @@ class ServerModifyDelete(Resource):
         :return:
         """
         server = server_modify_delete(unique_server_id, name="modify")
-        # server = server_modify_delete(name="modify")
         return server
 
 

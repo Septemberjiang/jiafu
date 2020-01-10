@@ -1,3 +1,6 @@
+from exts import db
+from flask import jsonify
+
 class GetListResult(object):
     def __init__(self, data, page, error_message, status):
         self.data = data
@@ -12,5 +15,6 @@ class GetListResult(object):
                 'next_page': page.next_page,
                 'has_next': page.has_next,
             }
-def get_list_data(data: list or dict or None, page=None, error_message=None, status=200):
+
+def json_response(data: list or dict or None, page=None, error_message=None, status=200):
     return GetListResult(data, page, error_message, status).__dict__

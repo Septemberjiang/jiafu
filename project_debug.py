@@ -32,5 +32,5 @@ app.register_blueprint(message_blueprint, url_prefix='/api/message')
 
 if __name__ == '__main__':
     # 默认为5000端口
-    app.run(host='0.0.0.0',debug=True)
+    app.run(host='127.0.0.1', port=5500, debug=True)
     # app.run(port=8000)
