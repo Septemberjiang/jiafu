@@ -49,6 +49,7 @@ class Permission(db.Model):
     url = db.Column(db.String(50))
     parent_id = db.Column(Integer)
     action = db.Column(db.String(50))
+    type = db.Column(db.String(50))
     describe = db.Column(db.String(1500))
 
 
@@ -64,6 +65,7 @@ class Server(db.Model):
     county=db.Column(db.String(50))
     company=db.Column(db.String(50))
     server_state=db.Column(db.String(50))
+    create_time = db.Column(db.DateTime)
     camera_info = db.relationship('Camera', backref='tb_server', lazy='select')
 
 class Camera(db.Model):
@@ -79,6 +81,7 @@ class Camera(db.Model):
     scene_at_degree = db.Column(db.String(50), default=0.3)  # 场景相识度
     move_check_wide = db.Column(db.String(50), default=1000)  # 移动检测阔值
     equipment_state = db.Column(db.String(50), default=0)  # 设备是否启用
+    create_time = db.Column(db.DateTime)
     unique_server_id = db.Column(db.String(50), db.ForeignKey('tb_server.unique_server_id'), nullable=False)
 
 

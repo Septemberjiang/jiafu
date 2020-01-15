@@ -2,9 +2,9 @@ from exts import db
 from flask import jsonify
 
 class GetListResult(object):
-    def __init__(self, data, page, error_message, status):
+    def __init__(self, data, page, error_message, code):
         self.data = data
-        self.status = status
+        self.code = code
         self.error_message = error_message
         if page:
             self.page = {
@@ -16,5 +16,23 @@ class GetListResult(object):
                 'has_next': page.has_next,
             }
 
-def json_response(data: list or dict or None, page=None, error_message=None, status=200):
-    return GetListResult(data, page, error_message, status).__dict__
+def json_response(data: list or dict or None, page=None, error_message=None, code=20000):
+    return GetListResult(data, page, error_message, code).__dict__
+
+
+
+
+
+
+class GetAllResult(object):
+    def __init__(self, obj, total, msg, code):
+        self.code = code
+        self.data = {
+            "total": total,
+            "items": obj,
+            "msg": msg,
+        }
+
+
+def get_all_response(obj: list or dict or None, total = None, msg=None, code=20000):
+    return GetAllResult(obj, total, msg, code).__dict__

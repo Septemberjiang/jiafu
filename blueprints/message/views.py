@@ -4,7 +4,7 @@ from flask_restful import Resource
 
 from blueprints.message.services import alarm_info_add, AlarmSchema, alarm_all
 from models import Alarm_info
-from common.auth_utils import login_required
+# from common.auth_utils import login_required
 from common.utils import json_response
 from models import User, Camera, Server, Alarm_info
 from exts import db
@@ -116,3 +116,5 @@ class AlarmMessageResource(Resource):
         """
         alarm = alarm_info_add()
         return alarm
+
+

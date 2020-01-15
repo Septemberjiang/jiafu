@@ -1,4 +1,5 @@
-from common.utils import json_response
+from common.auth_utils import platform_user_required
+from common.utils import json_response, get_all_response
 from models import Camera, Server
 from exts import db
 from flask import request, jsonify
@@ -11,42 +12,37 @@ from common.pagination import paginate
 
 #查看所有的设备
 class ExhibitionCamera(Resource):
+    # decorators = [platform_user_required]
 
     def get(self):
         """
         查看所有的设备
         :return:
         """
-        args = request.args
-        page = args.get('page', 1)
-        size = args.get('size', 10)
-        camera = args.get('camera')
-        camrea_obj = Camera.query.all()
-        if camrea_obj:
-            data = camera_exhibition(camera, camrea_obj, page, size)
-            return data
-        else:
-            return json_response(None, error_message="目前任何服务器下都无设备信息", status=400)
+        data = camera_exhibition(None)
+        return data
 
+
+class CameraInfo(Resource):
+    def get(self, unique_camera_id):
+        camera = Camera.query.filter_by(unique_camera_id=unique_camera_id).first()
+        if camera:
+            camera_schema = CameraSchema()
+            camera_dict = camera_schema.dump(camera)
+            return get_all_response(camera_dict, msg = "成功")
+        else:
+            return get_all_response(None, msg = "没有查到该设备的详情信息", code = 40000)
 
 # 查看某台服务器下的所有摄像头
 class Exhibition(Resource):
     def get(self, unique_server_id):
         """
         查看某台服务器下的所有摄像头
-        :param server_id:
+        :param unique_server_id:
         :return:
         """
-        args = request.args
-        page = args.get('page', 1)
-        size = args.get('size',10)
-        camera = args.get('camera')
-        camrea_obj = Camera.query.filter_by(unique_server_id=unique_server_id)
-        if camrea_obj:
-            data = camera_exhibition(camera,camrea_obj, page, size)
-            return data
-        else:
-            return json_response(None, error_message="该服务器下目前没有设备", status=400)
+        data = camera_exhibition(unique_server_id)
+        return data
 
 
 #摄像头的添加
@@ -55,14 +51,10 @@ class ExhibitionAdd(Resource):
     def post(self):
         """
         某台服务器下添加摄像头
-        :param unique_server_id:
-        :param kwargs:
         :return:
         """
         camrea = camrea_add(None, method='add')
         return camrea
-
-
 
 
 # 摄像头的删除、编辑、编辑渲染
@@ -75,10 +67,10 @@ class ExhibitionReseource(Resource):
         """
         camera = Camera.query.filter_by(unique_camera_id=unique_camera_id).first()
         if not camera:
-            return jsonify({'msg': '摄像头信息不匹配', 'code': 400})
+            return get_all_response(None, msg="摄像头信息不匹配", code=40000)
         camera_schema = CameraSchema()
         camera_dict = camera_schema.dump(camera)
-        return jsonify({"camera": camera_dict})
+        return get_all_response(camera_dict, code=20000)
 
     def delete(self, unique_camera_id):
         camera = Camera.query.filter_by(unique_camera_id=unique_camera_id).first()
@@ -86,16 +78,33 @@ class ExhibitionReseource(Resource):
             try:
                 db.session.delete(camera)
                 db.session.commit()
-                return jsonify({'msg':"删除成功",'code':200})
+                return get_all_response(None,msg="删除成功", code=20000)
             except:
                 db.session.rollback()
-                return jsonify({'msg':'删除出错', 'code':400})
+                return get_all_response(None,msg="删除出错", code=40000)
         else:
-            return jsonify({'msg':"没有匹配到该信息", 'code':400})
+            return get_all_response(None, msg="没有匹配到该信息", code=40000)
 
     def put(self, unique_camera_id):
         camera = camrea_add(unique_camera_id)
         return camera
+
+
+class CameraStatus(Resource):
+
+    def post(self):
+        form = request.get_json()
+        unique_camera_id = form.get('unique_camera_id')
+        state = form.get('state')
+        camera = Camera.query.filter_by(unique_camera_id=unique_camera_id).first()
+        if camera:
+            camera.equipment_state=state
+            db.session.add(camera)
+            db.session.commit()
+            return get_all_response(None, msg="状态修改成功", code=20000)
+        else:
+            db.session.rollback()
+            return get_all_response(None, msg="状态修改失败", code=40000)
 
 
 # 查看所有的服务器以及添加服务器
@@ -105,32 +114,38 @@ class ServerResource(Resource):
         查看所有的服务器
         :return:
         """
-        # form = request.get_json()
-        # page = form.get('page', 1)
-        # size = form.get('size', 10)
+        # form = request.args
         # server = form.get('server_name')
-        server_obj = Server.query
+        server_obj = Server.query.order_by(Server.create_time.desc()).all()
         # if server:
         #     server_obj = server_obj.filter(Server.server_name.like("%{}%".format(server)))
         if server_obj:
-            # page_result =paginate(server_obj,int(page),int(size))
-            # server = server_all(page_result.items)
             server = ServerSchema(many=True)
-            server_data = server.dump(server_obj.all())
-            # result_data = get_list_data(server, page_result)
-            result_data = json_response(server_data, status=200)
-            return result_data
+            server_data = server.dump(server_obj)
+            return get_all_response(server_data, total=len(server_obj), msg='展示成功')
         else:
-            return json_response(None, error_message="目前没有服务器", status=400)
+            return get_all_response(None, code=40000, msg='目前没有服务器')
 
     def post(self):
         """
         添加服务器
-        :param kwargs:
         :return:
         """
         server = server_add()
         return server
+
+
+#查看单挑服务器的信息
+class ServerInfoResource(Resource):
+    def get(self, unique_server_id):
+        server_obj = Server.query.filter_by(unique_server_id=unique_server_id).first()
+        server = ServerSchema()
+        server_data = server.dump(server_obj)
+        return jsonify({'code': 20000,
+                        "data": {
+                            "items": server_data,
+                            'msg': '展示成功'
+                        }})
 
 
 # 服务器删除、编辑、编辑数据回响
@@ -198,9 +213,3 @@ class CameraServer(Resource):
             server_dict['device_no'] = s.device_no
             server_list.append(server_dict)
         return jsonify({'server':server_list})
-
-
-
-
-
-
